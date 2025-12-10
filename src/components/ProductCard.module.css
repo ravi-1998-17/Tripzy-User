@@ -1,0 +1,29 @@
+.cardBox {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.2s ease-in-out;
+}
+
+.cardBox:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.imageBox {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  background: #f6f6f6;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.singleLine {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
