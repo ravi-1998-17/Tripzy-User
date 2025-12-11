@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "../store/slices/cartSlice";
 import { Container, Button } from "react-bootstrap";
+import { saveOrder, updateProductQty } from "../api/firebaseApi";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -21,14 +22,45 @@ function Checkout() {
 
   if (!address) return null;
 
-  function placeOrder() {
-    console.log("ORDER PLACED:", {
-      items: cartItems,
+  async function placeOrder() {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    if (!token || !userId) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
+
+    // STEP 1 — Create order object
+    const orderData = {
+      userId,
+      items: cartItems.map((i) => ({
+        productId: i.id,
+        name: i.name,
+        qty: i.qty,
+        price: i.price,
+      })),
       address,
       total,
+      status: "placed",
       payment: "COD",
-    });
+      createdAt: new Date().toISOString(),
+    };
+
+    // STEP 2 — Save order to Firebase
+    await saveOrder(orderData, token);
+
+    // STEP 3 — Reduce quantity of each product
+    for (let item of cartItems) {
+      const newQty = item.quantity - item.qty;
+      await updateProductQty(item.id, newQty, token);
+    }
+
+    // STEP 4 — Clear cart
     dispatch(clearCart());
+
+    alert("Order placed successfully!");
     navigate("/");
   }
 

@@ -3,6 +3,7 @@ import { Col, Form, Row, Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addAddress, selectAddress } from "../store/slices/addressSlice";
+import { saveAddress } from "../api/firebaseApi";
 
 function Address() {
   const dispatch = useDispatch();
@@ -22,8 +23,18 @@ function Address() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    if (!token || !userId) {
+      alert("Please login first");
+      return;
+    }
+
+    await saveAddress(userId, form, token);
 
     dispatch(addAddress(form));
     dispatch(selectAddress(form));

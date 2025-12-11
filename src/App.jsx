@@ -18,24 +18,26 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/address" element={<Address />} />
+
+        <Route
+          path="/address"
+          element={
+            <PrivateRoute>
+              <Address />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/checkout"
           element={
             <PrivateRoute>
-              {" "}
-              <Checkout />{" "}
+              <Checkout />
             </PrivateRoute>
           }
         />
-        <Route
-          path="/login"
-          element={
-            <PrivateRoute>
-              <Login />{" "}
-            </PrivateRoute>
-          }
-        />
+
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );

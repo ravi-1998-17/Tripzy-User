@@ -1,11 +1,18 @@
 import React from "react";
 import { Container, Form, Nav, Navbar, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../store/slices/authSlice";
 
 function Header() {
   const cartItems = useSelector((state) => state.cart.items);
   const totalQty = cartItems.reduce((sum, i) => sum + i.qty, 0);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const email = useSelector((state) => state.auth.email);
 
   return (
     <Navbar expand="md" bg="white" className="py-3 shadow-sm">
@@ -41,14 +48,24 @@ function Header() {
               )}
             </Link>
 
-            <Button
-              as={Link}
-              to="/login"
-              variant="outline-danger"
-              className="px-3"
-            >
-              Login / Register
-            </Button>
+            {token ? (
+              <>
+                <span className="me-3 fw-semibold">{email}</span>
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/login");
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button as={Link} to="/login" variant="outline-danger">
+                Login / Register
+              </Button>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
