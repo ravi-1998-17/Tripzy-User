@@ -7,7 +7,7 @@ export default function ProductCard({ product }) {
   const [imgError, setImgError] = useState(false);
 
   const placeholderImg =
-    "https://via.placeholder.com/300x200?text=No+Image";
+    "https://www.shineprolifesciences.net/product-image-dummy.jpg";
 
   const rating = product.ratings || 4.5;
 
