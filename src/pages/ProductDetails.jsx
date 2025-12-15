@@ -2,26 +2,54 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { addToCart } from "../store/slices/cartSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchProducts } from "../api/firebaseApi";
+import { setProducts, setLoading } from "../store/slices/productsSlice";
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [imgError, setImgError] = useState(false);
+
+  const { products, loading } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    if (products.length === 0) {
+      async function loadProducts() {
+        dispatch(setLoading());
+
+        const data = await fetchProducts();
+
+        if (data) {
+          const list = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+
+          dispatch(setProducts(list));
+        }
+      }
+
+      loadProducts();
+    }
+  }, [dispatch, products.length]);
+
+  if (loading) {
+    return <h3 className="text-center mt-5">Loading product...</h3>;
+  }
+
+  const product = products.find((p) => p.id === id);
+
+  if (!product) {
+    return <h3 className="text-center mt-5">Product Not Found</h3>;
+  }
 
   const placeholderImg =
     "https://www.shineprolifesciences.net/product-image-dummy.jpg";
 
-  const product = useSelector((state) =>
-    state.products.products.find((p) => p.id == id)
-  );
-
-  if (!product) return <h3>Product Not Found</h3>;
-
   const mainImage =
-    imgError || !product.images || !product.images[0]
+    imgError || !product.images?.[0]
       ? placeholderImg
       : product.images[0];
 
@@ -32,13 +60,12 @@ function ProductDetails() {
           <img
             src={mainImage}
             onError={() => setImgError(true)}
-            style={{ width: "100%", borderRadius: "10px" }}
             alt={product.name}
+            style={{ width: "100%", borderRadius: "10px" }}
           />
         </Col>
 
         <Col md={6}>
-          {/* 🔙 BACK BUTTON */}
           <Button
             variant="outline-dark"
             size="sm"
@@ -51,15 +78,10 @@ function ProductDetails() {
           <h2>{product.name}</h2>
           <h4 className="text-danger">₹{product.price}</h4>
 
-          <div className="d-flex align-items-center gap-2 mt-2">
-            <i className="bi bi-star-fill text-warning fs-5"></i>
-            <span className="fw-semibold">{product.ratings} / 5</span>
-          </div>
-
           <p className="mt-3">{product.description}</p>
 
           <p>
-            <strong>Quantity: </strong>
+            <strong>Quantity:</strong>{" "}
             {product.quantity === 0 ? "Out of Stock" : product.quantity}
           </p>
 
