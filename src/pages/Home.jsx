@@ -54,7 +54,6 @@ function Home() {
       <Slider />
 
       <Container className="mt-4 mb-4">
-        {/* CATEGORY BAR */}
         <div className="d-flex justify-content-between align-items-center mt-4 mb-4">
           <h3 className="m-0">Categories</h3>
 
@@ -73,7 +72,6 @@ function Home() {
           </div>
         </div>
 
-        {/* PRODUCTS */}
         <Row>
           {filteredProducts.map((product) => (
             <Col md={4} key={product.id} className="mb-4">

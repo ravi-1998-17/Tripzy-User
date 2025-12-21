@@ -32,7 +32,6 @@ function Checkout() {
       return;
     }
 
-    // STEP 1 — Create order object
     const orderData = {
       userId,
       items: cartItems.map((i) => ({
@@ -48,16 +47,13 @@ function Checkout() {
       createdAt: new Date().toISOString(),
     };
 
-    // STEP 2 — Save order to Firebase
     await saveOrder(orderData, token);
 
-    // STEP 3 — Reduce quantity of each product
     for (let item of cartItems) {
       const newQty = item.quantity - item.qty;
       await updateProductQty(item.id, newQty, token);
     }
 
-    // STEP 4 — Clear cart
     dispatch(clearCart());
 
     alert("Order placed successfully!");
@@ -68,7 +64,6 @@ function Checkout() {
     <Container className="mt-4">
       <h3>Checkout</h3>
 
-      {/* DELIVERY ADDRESS SECTION */}
       <div className="mt-3 p-3 border rounded">
         <h5>Delivery Address</h5>
 
@@ -87,7 +82,6 @@ function Checkout() {
         </Button>
       </div>
 
-      {/* ORDER SUMMARY */}
       <div className="mt-3 p-3 border rounded">
         <h5>Order Summary</h5>
         {cartItems.map((item) => (
