@@ -1,6 +1,5 @@
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import CategoryPage from "./pages/CategoryPage";
 import { Route, Routes } from "react-router-dom";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";

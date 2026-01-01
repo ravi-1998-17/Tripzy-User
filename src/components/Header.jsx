@@ -48,6 +48,19 @@ function Header() {
               )}
             </Link>
 
+            {/* ADMIN BUTTON */}
+            <Button
+              variant="outline-dark"
+              onClick={() =>
+                window.open(
+                  "https://tripzy-admin.vercel.app/admin-login",
+                  "_blank"
+                )
+              }
+            >
+              Admin
+            </Button>
+
             {token ? (
               <>
                 <span className="me-3 fw-semibold">{email}</span>

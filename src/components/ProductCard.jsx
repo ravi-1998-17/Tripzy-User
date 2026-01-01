@@ -14,7 +14,6 @@ export default function ProductCard({ product }) {
   return (
     <Card className={`shadow-sm ${styles.cardBox}`}>
 
-      {/* IMAGE */}
       <div className={styles.imageBox}>
         <img
           src={imgError ? placeholderImg : product.images[0]}
